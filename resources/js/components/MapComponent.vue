@@ -50,7 +50,9 @@
                                 //if(datacenter.provider.code === 'platformsh') markerColor = 'black'
                                 if(datacenter.provider.code === 'oracle') markerColor = '#9b9b9b'
 
-                                new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).addTo(map);
+                                let popup = new mapboxgl.Popup({offset: 25})
+                                    .setHTML('<h1>'+datacenter.provider.name+'</h1><br/><p>'+datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api+'</strong></p>')
+                                new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup).addTo(map);
                             })
                         })
                     // TODO: Here we want to load a layer
