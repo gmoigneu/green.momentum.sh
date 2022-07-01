@@ -92,7 +92,7 @@ web:
       root: "storage/app/public"
       scripts: false
 
-crons:
+#crons:
   # Run Laravel's scheduler every 5 minutes, which is often as crons can run on Professional plans.
 #  scheduler:
 #    spec: '*/5 * * * *'
