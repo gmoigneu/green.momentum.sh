@@ -29,7 +29,7 @@ class DatacenterController extends Controller
 //            return Cache::get($key);
 //        }
 
-        $collection = Datacenter::where('planned', false);
+        $collection = Datacenter::where('provider_id', '!=', 8);
         if($request->has('provider') && !is_null($request->input('provider'))) {
             $provider = Provider::where('code', $request->input('provider'))->firstOrFail();
             $collection->where('provider_id', $provider->id);
