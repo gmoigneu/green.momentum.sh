@@ -26,4 +26,12 @@ export default defineConfig({
             }
         })
     ],
+    css: {
+        postCss: {
+            plugins: {
+                tailwindcss: {},
+                autoprefixer: {},
+            },
+        },
+    },
 });

@@ -1,5 +1,10 @@
 <template>
     <div id="map">
+        <div id="sidebar" class="sidebar flex-center left collapsed">
+            <div class="sidebar-content rounded-rect flex-center">
+                <sidebar @toggleProvider="toggleProvider"></sidebar>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -9,57 +14,75 @@
     import mapboxgl from "mapbox-gl";
     import "mapbox-gl/dist/mapbox-gl.css";
     import { onMounted } from "vue";
-    import {forEach} from "lodash/collection";
+    import Sidebar from "./Sidebar.vue";
+    import { watch, ref } from 'vue'
+    import {useStore} from "vuex";
 
     export default {
-        data() {
-            return {
-                datacenters: {},
+        components: {
+          Sidebar
+        },
+        methods: {
+            toggleProvider(providerId) {
+                // provider = providers.find(o => o.id === providerId);
+                // provider.enabled = false
             }
         },
-        setup() {
+        setup(props) {
+            const map = ref(false)
+            const store = useStore();
+
+            // watch(providers, () => draw())
+            // watch(providers, () => console.log(providers.value))
+            // watch(datacenters, () => draw())
+
+            function draw() {
+                console.log("DRAW")
+                if(store.state.providers.length < 1 || !store.state.datacenters.length < 1 || !map.value) {
+                    return
+                } else {
+                    console.log("Drawing boss")
+                }
+                // Get the excluded providers
+                let excludedProviders = []
+
+                store.state.providers.forEach(function(provider) {
+                    if(!provider.enabled) {
+                        excludedProviders.push(provider.code)
+                    }
+                })
+
+                // Filter out the excluded one
+                let datacentersToDraw = store.state.datacenters.filter(function(datacenter) {
+                    return !excludedProviders.includes(datacenter.provider.code)
+                })
+
+                _.forEach(datacentersToDraw, function(datacenter) {
+                    let markerColor = 'black'
+                    let popup = new mapboxgl.Popup({offset: 25})
+                        .setHTML('<h1>'+datacenter.provider.name+'</h1><br/><p>'+datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api+'</strong></p>')
+                    new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup).addTo(map.value);
+                })
+            }
+
             onMounted(() => {
+                // Get available providers
+                store.dispatch('fetchProviders')
+                store.dispatch('fetchDatacenters')
+
                 mapboxgl.accessToken =
                     "pk.eyJ1IjoiZ21vaWduZXUiLCJhIjoiY2w1MnZvMHo1MGd1ZDNqb2M4bWdhc2x3bCJ9.PIX7RMRtjGkFiVCU5jgXBA";
-                const map = new mapboxgl.Map({
+                map.value = new mapboxgl.Map({
                     container: "map",
                     style: "mapbox://styles/mapbox/light-v9",
                 });
-                map.on('load', () => {
-                    axios.get('/api/datacenters')
-                        .then((response)=>{
-                            let datacenters = response.data.data
-                            console.log(datacenters)
-                            _.forEach(datacenters, function(datacenter) {
-                                // const el = document.createElement('div');
-                                // el.className = 'marker';
-
-                                // make a marker for each feature and add to the map
-
-                                let markerColor = 'black'
-
-                                if(datacenter.provider.code === 'aws') markerColor = '#db9815'
-                                if(datacenter.provider.code === 'azure') markerColor = '#1b5281'
-                                if(datacenter.provider.code === 'orange') markerColor = '#db4d15'
-                                if(datacenter.provider.code === 'gcp') markerColor = '#1580db'
-                                if(datacenter.provider.code === 'alibaba') markerColor = 'brown'
-                                if(datacenter.provider.code === 'interoute') markerColor = '#6f2676'
-                                if(datacenter.provider.code === 'digitalocean') markerColor = '#092944'
-                                if(datacenter.provider.code === 'rackspace') markerColor = '#ba1313'
-                                if(datacenter.provider.code === 'upcloud') markerColor = '#442676'
-                                //if(datacenter.provider.code === 'platformsh') markerColor = 'black'
-                                if(datacenter.provider.code === 'oracle') markerColor = '#9b9b9b'
-
-                                let popup = new mapboxgl.Popup({offset: 25})
-                                    .setHTML('<h1>'+datacenter.provider.name+'</h1><br/><p>'+datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api+'</strong></p>')
-                                new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup).addTo(map);
-                            })
-                        })
-                    // TODO: Here we want to load a layer
-                    // TODO: Here we want to load/setup the popup
+                map.value.on('load', () => {
+                    draw()
                 });
-            });
-            return {};
+            })
+
+            return {
+            };
         },
     }
 </script>

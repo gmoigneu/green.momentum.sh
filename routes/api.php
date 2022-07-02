@@ -21,3 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('datacenters', \App\Http\Controllers\DatacenterController::class)->only([
     'index', 'show'
 ]);
+
+Route::resource('providers', \App\Http\Controllers\ProviderController::class)->only([
+    'index'
+]);

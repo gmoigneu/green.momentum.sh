@@ -14,8 +14,12 @@
         "vite": "^2.9.11"
     },
     "dependencies": {
+        "@headlessui/vue": "^1.6.5",
+        "@heroicons/vue": "^1.0.6",
         "@vitejs/plugin-vue": "^2.3.3",
+        "heroicons": "^1.0.6",
         "mapbox-gl": "^2.9.1",
-        "vue": "^3.2.37"
+        "vue": "^3.2.37",
+        "vuex": "^4.0.2"
     }
 }
