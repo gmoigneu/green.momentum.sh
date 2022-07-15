@@ -117,7 +117,11 @@ workers:
             # and get restarted automatically.
             start: |
                 php artisan queue:work --max-time=3600
-
+    schedule-worker:
+        size: S
+        commands:
+            start: |
+                php artisan schedule:work
 #source:
 #  operations:
 #    auto-update:
