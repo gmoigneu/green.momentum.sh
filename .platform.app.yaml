@@ -116,7 +116,7 @@ workers:
             # To minimize leakage, the queue worker will stop every hour
             # and get restarted automatically.
             start: |
-                php artisan queue:work --max-time=3600
+                php artisan schedule:work --max-time=3600
 
 #source:
 #  operations:
