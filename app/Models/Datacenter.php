@@ -24,4 +24,12 @@ class Datacenter extends Model
     {
         return $this->belongsToMany(Region::class);
     }
+
+    /**
+     * Get the usages
+     */
+    public function usages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Usage::class)->orderBy('created_at', 'DESC')->limit(10);
+    }
 }

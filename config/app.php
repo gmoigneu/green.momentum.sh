@@ -143,6 +143,8 @@ return [
         // 'store'  => 'redis',
     ],
 
+    'co2' => env('CO2SIGNAL', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
