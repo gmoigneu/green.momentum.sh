@@ -25,16 +25,12 @@ class UpdateEnergyRecordsJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($datacenter)
+    public function __construct()
     {
         $this->endpoint = "https://api.co2signal.com/v1/latest";
         $this->token = config("app.co2");
 
-        if(!is_null($datacenter)) {
-            $this->datacenter = $datacenter;
-        } else {
-            $this->datacenter = Datacenter::orderBy('updated_at', 'asc')->first();
-        }
+        $this->datacenter = Datacenter::orderBy('updated_at', 'asc')->first();
     }
 
     /**

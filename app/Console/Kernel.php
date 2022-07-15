@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->job(new UpdateEnergyRecordsJob(null))->everyFiveMinutes();
+        $schedule->job(new UpdateEnergyRecordsJob())->everyFiveMinutes();
     }
 
     /**
