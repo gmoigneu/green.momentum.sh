@@ -55,6 +55,12 @@ const store = createStore({
         },
         SET_DATACENTERS(state, datacenters) {
             state.datacenters = datacenters
+        },
+        TOGGLE_PROVIDER(state, providerId) {
+            let providers = Object.assign([], state.providers);
+            let provider = providers.find(o => o.id === providerId);
+            provider.enabled = !provider.enabled
+            state.providers = providers
         }
     }
 });

@@ -24,13 +24,13 @@
         },
         methods: {
             toggleProvider(providerId) {
-                // provider = providers.find(o => o.id === providerId);
-                // provider.enabled = false
+                this.$store.commit('TOGGLE_PROVIDER', providerId)
             }
         },
         setup(props) {
             const map = ref(false)
-            const store = useStore();
+            const store = useStore()
+            const markers = []
 
             // watch(providers, () => draw())
             // watch(providers, () => console.log(providers.value))
@@ -40,18 +40,12 @@
             store.watch(
                 (state, getters) => [ getters.getDatacenters, getters.getProviders ],
                 (newValue, oldValue) => {
-                    console.log(`Updating from ${oldValue} to ${newValue}`);
-
                     draw()
                 },
             );
 
             function draw() {
-                console.log("DRAW")
                 if(store.getters.getProviders.length < 1 || store.getters.getDatacenters.length < 1 || !map.value) {
-                    console.log("Providers:" + store.getters.getProviders.length)
-                    console.log("Datacenters:" + store.getters.getDatacenters.length)
-                    console.log("Map:" + map.value)
                     return
                 }
                 // Get the excluded providers
@@ -68,11 +62,17 @@
                     return !excludedProviders.includes(datacenter.provider.code)
                 })
 
+                _.forEach(markers, function(marker) {
+                    marker.remove()
+                })
+
                 _.forEach(datacentersToDraw, function(datacenter) {
                     let markerColor = 'black'
                     let popup = new mapboxgl.Popup({offset: 25})
                         .setHTML('<h1>'+datacenter.provider.name+'</h1><br/><p>'+datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api+'</strong></p>')
-                    new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup).addTo(map.value);
+                    let marker = new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup)
+                    markers.push(marker)
+                    marker.addTo(map.value);
                 })
             }
 
