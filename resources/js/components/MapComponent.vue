@@ -2,7 +2,10 @@
     <div id="map">
         <div id="sidebar" class="sidebar flex-center left collapsed">
             <div class="sidebar-content rounded-rect flex-center">
-                <sidebar @toggleProvider="toggleProvider"></sidebar>
+                <div id="sidebarButton" :class="{ hidden: this.isSidebarOpened }">
+                    <button type="button" @click="toggleSidebar()" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Open configuration</button>
+                </div>
+                <sidebar @toggleProvider="toggleProvider" :open="isSidebarOpened" :toggle="toggleSidebar" ref="sidebar"></sidebar>
             </div>
         </div>
     </div>
@@ -22,9 +25,17 @@
         components: {
           Sidebar
         },
+        data() {
+            return {
+                isSidebarOpened: false
+            }
+        },
         methods: {
             toggleProvider(providerId) {
                 this.$store.commit('TOGGLE_PROVIDER', providerId)
+            },
+            toggleSidebar() {
+                this.isSidebarOpened = !this.isSidebarOpened
             }
         },
         setup(props) {
@@ -101,5 +112,14 @@
 <style>
 #map {
     height: 100vh;
+}
+.hidden {
+    display: none;
+}
+#sidebarButton {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 9999;
 }
 </style>

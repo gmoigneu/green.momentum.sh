@@ -1,7 +1,7 @@
 <template>
     <h2>Providers</h2>
     <TransitionRoot as="template" :show="open">
-        <Dialog as="div" class="relative z-10" @close="open = false">
+        <Dialog as="div" class="relative z-10" @close="toggle">
             <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
             </TransitionChild>
@@ -15,7 +15,7 @@
                                         <div class="flex items-start justify-between">
                                             <DialogTitle class="text-lg font-medium text-gray-900"> Providers </DialogTitle>
                                             <div class="ml-3 flex h-7 items-center">
-                                                <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="open = false">
+                                                <button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="toggle">
                                                     <span class="sr-only">Close panel</span>
                                                     <XIcon class="h-6 w-6" aria-hidden="true" />
                                                 </button>
@@ -59,12 +59,10 @@ export default {
         XIcon
     },
 
-    setup(props) {
-        const open = ref(true)
-        return {
-            open,
-        }
-    },
+    props: {
+        open: Boolean,
+        toggle: Function
+    }
 }
 </script>
 
