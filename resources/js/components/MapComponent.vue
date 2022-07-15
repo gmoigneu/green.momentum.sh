@@ -36,24 +36,35 @@
             // watch(providers, () => console.log(providers.value))
             // watch(datacenters, () => draw())
 
+
+            store.watch(
+                (state, getters) => [ getters.getDatacenters, getters.getProviders ],
+                (newValue, oldValue) => {
+                    console.log(`Updating from ${oldValue} to ${newValue}`);
+
+                    draw()
+                },
+            );
+
             function draw() {
                 console.log("DRAW")
-                if(store.state.providers.length < 1 || !store.state.datacenters.length < 1 || !map.value) {
+                if(store.getters.getProviders.length < 1 || store.getters.getDatacenters.length < 1 || !map.value) {
+                    console.log("Providers:" + store.getters.getProviders.length)
+                    console.log("Datacenters:" + store.getters.getDatacenters.length)
+                    console.log("Map:" + map.value)
                     return
-                } else {
-                    console.log("Drawing boss")
                 }
                 // Get the excluded providers
                 let excludedProviders = []
 
-                store.state.providers.forEach(function(provider) {
+                store.getters.getProviders.forEach(function(provider) {
                     if(!provider.enabled) {
                         excludedProviders.push(provider.code)
                     }
                 })
 
                 // Filter out the excluded one
-                let datacentersToDraw = store.state.datacenters.filter(function(datacenter) {
+                let datacentersToDraw = store.getters.getDatacenters.filter(function(datacenter) {
                     return !excludedProviders.includes(datacenter.provider.code)
                 })
 
@@ -84,6 +95,7 @@
             return {
             };
         },
+
     }
 </script>
 <style>
