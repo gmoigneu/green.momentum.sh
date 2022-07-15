@@ -107,7 +107,7 @@ crons:
 #    cmd: 'php artisan schedule:run'
   usage:
     spec: '*/5 * * * *'
-    cmd: 'php artisan usage:update'
+    cmd: 'php artisan usage:update && sleep 5 && php artisan usage:update'
 
 # If you have an especially large queue, you may be better off using a worker.
 # If so, comment out the `queue` cron entry and uncomment this instead. Note that
