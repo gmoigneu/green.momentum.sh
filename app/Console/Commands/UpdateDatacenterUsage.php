@@ -14,7 +14,7 @@ class UpdateDatacenterUsage extends Command
      *
      * @var string
      */
-    protected $signature = 'usage:update {datacenter}';
+    protected $signature = 'usage:update';
 
     /**
      * The console command description.
@@ -30,12 +30,7 @@ class UpdateDatacenterUsage extends Command
      */
     public function handle()
     {
-        $datacenter = Datacenter::findOrFail($this->argument('datacenter'));
-
-        var_dump($datacenter);
-
-        UpdateEnergyRecordsJob::dispatchSync($datacenter);
-
+        UpdateEnergyRecordsJob::dispatchSync();
         return 0;
     }
 }

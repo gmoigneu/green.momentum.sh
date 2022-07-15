@@ -101,10 +101,13 @@ web:
       scripts: false
 
 crons:
-  # Run Laravel's scheduler every 5 minutes, which is often as crons can run on Professional plans.
-  scheduler:
+# Run Laravel's scheduler every 5 minutes, which is often as crons can run on Professional plans.
+#  scheduler:
+#    spec: '*/5 * * * *'
+#    cmd: 'php artisan schedule:run'
+  usage:
     spec: '*/5 * * * *'
-    cmd: 'php artisan schedule:run'
+    cmd: 'php artisan usage:update'
 
 # If you have an especially large queue, you may be better off using a worker.
 # If so, comment out the `queue` cron entry and uncomment this instead. Note that
@@ -117,11 +120,11 @@ workers:
             # and get restarted automatically.
             start: |
                 php artisan queue:work --max-time=3600
-    schedule-worker:
-        size: S
-        commands:
-            start: |
-                php artisan schedule:work
+#    schedule-worker:
+#        size: S
+#        commands:
+#            start: |
+#                php artisan schedule:work
 #source:
 #  operations:
 #    auto-update:
