@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class UpdateEnergyRecordsJob implements ShouldQueue
 {
@@ -50,15 +51,21 @@ class UpdateEnergyRecordsJob implements ShouldQueue
         ]);
 
         if($response->successful()) {
-            $usage = Usage::create([
-                'countryCode' => $response->json('countryCode'),
-                'carbonIntensity' => $response->json('data.carbonIntensity'),
-                'fossilFuelPercentage' => $response->json('data.fossilFuelPercentage'),
-                'units'  => $response->json('units.carbonIntensity'),
-                'datacenter_id' => $this->datacenter->id
-            ]);
-            $this->datacenter->touch();
+            try {
+                $usage = Usage::create([
+                    'countryCode' => $response->json('countryCode'),
+                    'carbonIntensity' => $response->json('data.carbonIntensity'),
+                    'fossilFuelPercentage' => $response->json('data.fossilFuelPercentage'),
+                    'units'  => $response->json('units.carbonIntensity'),
+                    'datacenter_id' => $this->datacenter->id
+                ]);
+                $this->datacenter->touch();
+            } catch (\Exception $e) {
+                $this->datacenter->touch();
+                Log::error("Updating usage for ".$this->datacenter->id." failed.", dump($response->json()));
+            }
         } else {
+            Log::error("Updating usage for ".$this->datacenter->id." failed. Not 200.");
             die('Error');
         }
     }

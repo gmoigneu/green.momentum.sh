@@ -30,7 +30,7 @@ class UpdateDatacenterUsage extends Command
      */
     public function handle()
     {
-        UpdateEnergyRecordsJob::dispatchSync();
+        UpdateEnergyRecordsJob::dispatch();
         return 0;
     }
 }
