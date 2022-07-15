@@ -1,2 +1,5 @@
 cache:
   type: redis:6.0
+datastorage:
+  type: network-storage:2.0
+  disk: 4096
