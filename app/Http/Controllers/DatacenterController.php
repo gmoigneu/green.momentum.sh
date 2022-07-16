@@ -29,7 +29,7 @@ class DatacenterController extends Controller
 //            return Cache::get($key);
 //        }
 
-        $collection = Datacenter::where('provider_id', '!=', 8);
+        $collection = Datacenter::with('usage')->with('provider')->with('regions');
         if($request->has('provider') && !is_null($request->input('provider'))) {
             $provider = Provider::where('code', $request->input('provider'))->firstOrFail();
             $collection->where('provider_id', $provider->id);
@@ -41,7 +41,7 @@ class DatacenterController extends Controller
             });
         }
 
-        $response = DatacenterResource::collection($collection->with('provider')->with('regions')->get());
+        $response = DatacenterResource::collection($collection->get());
         Cache::put($key, $response, 600);
 
         return $response;

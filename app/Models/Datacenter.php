@@ -32,4 +32,12 @@ class Datacenter extends Model
     {
         return $this->hasMany(Usage::class)->orderBy('created_at', 'DESC')->limit(10);
     }
+
+    /**
+     * Get the usages
+     */
+    public function usage(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Usage::class)->latest();
+    }
 }

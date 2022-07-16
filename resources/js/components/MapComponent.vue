@@ -79,8 +79,32 @@
 
                 _.forEach(datacentersToDraw, function(datacenter) {
                     let markerColor = 'black'
+
+                    let html = '<h1 class="text-l font-bold">'+datacenter.provider.name+'</h1>'+
+                        '<p>' +datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api + '</strong></p>'
+
+                    if(datacenter.usage) {
+                        html += '<p>Carbon intensity: '+datacenter.usage.carbonIntensity+' '+datacenter.usage.units+'</p>'
+                        html += '<p>Fossil Fuel: '+datacenter.usage.fossilFuelPercentage+'%</p>'
+
+                        if (datacenter.usage.carbonIntensity <= 100) {
+                            markerColor = 'green'
+                        } else if (datacenter.usage.carbonIntensity <= 300) {
+                            markerColor = 'yellow'
+                        } else if (datacenter.usage.carbonIntensity <= 600) {
+                            markerColor = 'red'
+                        } else {
+                            markerColor = 'brown'
+                        }
+                    } else {
+                        html += '<p>Carbon intensity: Not available</p>'
+                        html += '<p>Fossil Fuel: Not available</p>'
+                    }
+
+
+
                     let popup = new mapboxgl.Popup({offset: 25})
-                        .setHTML('<h1>'+datacenter.provider.name+'</h1><br/><p>'+datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api+'</strong></p>')
+                        .setHTML(html)
                     let marker = new mapboxgl.Marker({ color: markerColor, rotation: 45}).setLngLat([datacenter.long, datacenter.lat]).setPopup(popup)
                     markers.push(marker)
                     marker.addTo(map.value);

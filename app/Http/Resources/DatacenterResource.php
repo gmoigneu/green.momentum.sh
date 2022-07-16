@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Usage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DatacenterResource extends JsonResource
@@ -25,7 +26,8 @@ class DatacenterResource extends JsonResource
             'planned' => $this->planned,
             'special' => $this->special,
             'provider' => new ProviderResource($this->provider),
-            'regions' => RegionResource::collection($this->regions)
+            'regions' => RegionResource::collection($this->regions),
+            'usage' =>  new UsageResource($this->usage)
         ];
     }
 }
