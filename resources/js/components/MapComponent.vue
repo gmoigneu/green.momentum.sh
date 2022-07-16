@@ -1,14 +1,20 @@
 <template>
+    <div>
     <div id="map">
-        <div id="title" class="px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white"><h1 class="text-l">Cloud datacenters carbon intensity</h1></div>
-        <div id="sidebar" class="sidebar flex-center left collapsed">
-            <div class="sidebar-content rounded-rect flex-center">
-                <div id="sidebarButton" :class="{ hidden: this.isSidebarOpened }">
-                    <button type="button" @click="toggleSidebar()" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"><AdjustmentsIcon class="h-5 w-5 text-gray-500 mr-2"/> Select cloud providers</button>
-                </div>
+<!--        <div class="absolute z-40 vh-100 w-full top-0 p-2">-->
+<!--            <div id="title" class="px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white"><h1 class="flex-1 align-items-center justify-center text-center text-l">Cloud datacenters carbon intensity</h1></div>-->
+<!--        </div>-->
+        <div class="absolute z-40 vh-100 w-full bottom-0 p-2 content-center text-center">
+            <div id="sidebarButton" :class="{ hidden: this.isSidebarOpened }" class="">
+                <button type="button" @click="toggleSidebar()" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"><AdjustmentsIcon class="h-5 w-5 text-gray-500 mr-2"/> Select cloud providers</button>
+            </div>
+        </div>
+        <div id="sidebar" class="sidebar z-50 hidden flex-center left collapsed">
+            <div class="sidebar-content z-50 rounded-rect flex-center">
                 <sidebar @toggleProvider="toggleProvider" :open="isSidebarOpened" :toggle="toggleSidebar" ref="sidebar"></sidebar>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -143,17 +149,11 @@
 .hidden {
     display: none;
 }
-#sidebarButton {
-    position: absolute;
-    right: 10px;
-    top: 10px;
+
+#sidebar {
     z-index: 9999;
 }
-
 #title {
-    position: absolute;
-    left: 10px;
-    top: 10px;
     z-index: 9999;
 }
 </style>
