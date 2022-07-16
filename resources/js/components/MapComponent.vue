@@ -1,9 +1,10 @@
 <template>
     <div id="map">
+        <div id="title" class="px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white"><h1 class="text-l">Cloud datacenters carbon intensity</h1></div>
         <div id="sidebar" class="sidebar flex-center left collapsed">
             <div class="sidebar-content rounded-rect flex-center">
                 <div id="sidebarButton" :class="{ hidden: this.isSidebarOpened }">
-                    <button type="button" @click="toggleSidebar()" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Open configuration</button>
+                    <button type="button" @click="toggleSidebar()" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"><AdjustmentsIcon class="h-5 w-5 text-gray-500 mr-2"/> Select cloud providers</button>
                 </div>
                 <sidebar @toggleProvider="toggleProvider" :open="isSidebarOpened" :toggle="toggleSidebar" ref="sidebar"></sidebar>
             </div>
@@ -20,10 +21,12 @@
     import Sidebar from "./Sidebar.vue";
     import { watch, ref } from 'vue'
     import {useStore} from "vuex";
+    import { AdjustmentsIcon } from "@heroicons/vue/outline"
 
     export default {
         components: {
-          Sidebar
+            Sidebar,
+            AdjustmentsIcon
         },
         data() {
             return {
@@ -78,7 +81,7 @@
                 })
 
                 _.forEach(datacentersToDraw, function(datacenter) {
-                    let markerColor = 'black'
+                    let markerColor = '#d4d4d8'
 
                     let html = '<h1 class="text-l font-bold">'+datacenter.provider.name+'</h1>'+
                         '<p>' +datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api + '</strong></p>'
@@ -88,13 +91,13 @@
                         html += '<p>Fossil Fuel: '+datacenter.usage.fossilFuelPercentage+'%</p>'
 
                         if (datacenter.usage.carbonIntensity <= 100) {
-                            markerColor = 'green'
+                            markerColor = '#84cc16'
                         } else if (datacenter.usage.carbonIntensity <= 300) {
-                            markerColor = 'yellow'
+                            markerColor = '#fbbf24'
                         } else if (datacenter.usage.carbonIntensity <= 600) {
-                            markerColor = 'red'
+                            markerColor = '#dc2626'
                         } else {
-                            markerColor = 'brown'
+                            markerColor = '#991b1b'
                         }
                     } else {
                         html += '<p>Carbon intensity: Not available</p>'
@@ -143,6 +146,13 @@
 #sidebarButton {
     position: absolute;
     right: 10px;
+    top: 10px;
+    z-index: 9999;
+}
+
+#title {
+    position: absolute;
+    left: 10px;
     top: 10px;
     z-index: 9999;
 }
