@@ -88,23 +88,71 @@
 
                 _.forEach(datacentersToDraw, function(datacenter) {
                     let markerColor = '#d4d4d8'
+                    let clightColor = 'text-gray-300'
+                    let cdarkColor = 'text-gray-600'
+                    let flightColor = 'text-gray-300'
+                    let fdarkColor = 'text-gray-600'
 
                     let html = '<h1 class="text-l font-bold">'+datacenter.provider.name+'</h1>'+
-                        '<p>' +datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api + '</strong></p>'
+                        '<p class="mb-4">' +datacenter.city+' ('+datacenter.country_code+') - <strong>'+datacenter.provider_code_api + '</strong></p>'
 
                     if(datacenter.usage) {
-                        html += '<p>Carbon intensity: '+datacenter.usage.carbonIntensity+' '+datacenter.usage.units+'</p>'
-                        html += '<p>Fossil Fuel: '+datacenter.usage.fossilFuelPercentage+'%</p>'
 
                         if (datacenter.usage.carbonIntensity <= 100) {
-                            markerColor = '#84cc16'
+                            markerColor = '#4ade80'
+                            clightColor = 'green-300'
+                            cdarkColor = 'green-600'
                         } else if (datacenter.usage.carbonIntensity <= 300) {
                             markerColor = '#fbbf24'
+                            clightColor = 'amber-300'
+                            cdarkColor = 'amber-600'
                         } else if (datacenter.usage.carbonIntensity <= 600) {
-                            markerColor = '#dc2626'
+                            markerColor = '#fb923c'
+                            clightColor = 'orange-300'
+                            cdarkColor = 'orange-600'
                         } else {
-                            markerColor = '#991b1b'
+                            markerColor = '#ef4444'
+                            clightColor = 'red-300'
+                            cdarkColor = 'red-600'
                         }
+
+                        if (datacenter.usage.fossilFuelPercentage <= 25) {
+                            flightColor = 'green-300'
+                            fdarkColor = 'green-600'
+                        } else if (datacenter.usage.fossilFuelPercentage <= 50) {
+                            flightColor = 'amber-300'
+                            fdarkColor = 'amber-600'
+                        } else if (datacenter.usage.fossilFuelPercentage <= 75) {
+                            flightColor = 'orange-300'
+                            fdarkColor = 'orange-600'
+                        } else {
+                            flightColor = 'red-300'
+                            fdarkColor = 'red-600'
+                        }
+
+                        html += '<div class="grid grid-cols-2 gap-4">\n' +
+                            '                <div>\n' +
+                            '                    <span class="inline-flex items-center h-10 px-6 py-6 rounded-md text-xl font-medium bg-'+clightColor+' text-'+cdarkColor+'">\n' +
+                            '                        <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-'+cdarkColor+'" fill="currentColor" viewBox="0 0 8 8">\n' +
+                            '                          <circle cx="4" cy="4" r="3" />\n' +
+                            '                        </svg>\n' +
+                            '                        '+datacenter.usage.carbonIntensity+'g\n' +
+                            '                    </span>\n' +
+                            '                   <p class="text-center">Carbon intensity</p>\n' +
+                            '               </div>\n' +
+                            '               <div>\n' +
+                            '                    <span class="inline-flex items-center h-10 px-6 py-6 rounded-md text-xl font-medium bg-'+flightColor+' text-'+fdarkColor+'">\n' +
+                            '                        <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-'+fdarkColor+'" fill="currentColor" viewBox="0 0 8 8">\n' +
+                            '                          <circle cx="4" cy="4" r="3" />\n' +
+                            '                        </svg>\n' +
+                            '                        '+Math.round(datacenter.usage.fossilFuelPercentage)+'%\n' +
+                            '                    </span>\n' +
+                            '                   <p class="text-center">Fossil fuel</p>\n' +
+                            '               </div>\n' +
+                            '           </div>'
+
+
+
                     } else {
                         html += '<p>Carbon intensity: Not available</p>'
                         html += '<p>Fossil Fuel: Not available</p>'
@@ -156,4 +204,9 @@
 #title {
     z-index: 9999;
 }
+
+.mapboxgl-popup-close-button {
+    right: 4px;
+}
+
 </style>
